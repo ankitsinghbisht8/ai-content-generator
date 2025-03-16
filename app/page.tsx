@@ -24,9 +24,7 @@ export default function Home() {
             </Link>
           </nav>
           <div className="flex items-center gap-4">
-            <Button variant="ghost" size="sm" asChild>
-              <Link href="/dashboard">Login</Link>
-            </Button>
+
             <Button size="sm" asChild>
               <Link href="/dashboard">Get Started</Link>
             </Button>
