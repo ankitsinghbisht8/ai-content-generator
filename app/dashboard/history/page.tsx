@@ -14,7 +14,7 @@ export interface HISTORY {
   aiResponse: string | null;
   templateSlug: string;
   createdBy: string | null;
-  createdAt: string | null;
+  createdAt: Date | null; // Change type to match DB response
 }
 
 // 🎯 Optimized Client Component
