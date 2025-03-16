@@ -26,7 +26,7 @@ function UsageTrack() {
   }, [user]);
 
   useEffect(() => {
-    if (user && updateCreditUsage) {
+    if (user && Boolean(updateCreditUsage)) {
       GetData();
     }
   }, [updateCreditUsage, user]);
@@ -35,12 +35,13 @@ function UsageTrack() {
     if (!user?.primaryEmailAddress?.emailAddress) return;
 
     try {
-      const result: HISTORY[] = await db
+      const result = await db
         .select()
         .from(AIOutput)
-        .where(eq(AIOutput.createdBy, user.primaryEmailAddress.emailAddress));
+        .where(eq(AIOutput.createdBy, user.primaryEmailAddress.emailAddress))
+        .then(res => res || []); // Ensure result is always an array
 
-      GetTotalUsage(result);
+      GetTotalUsage(result as HISTORY[]);
     } catch (error) {
       console.error("Error fetching AI output history:", error);
     }
@@ -53,7 +54,8 @@ function UsageTrack() {
       const result = await db
         .select()
         .from(UserSubscription)
-        .where(eq(UserSubscription.email, user.primaryEmailAddress.emailAddress));
+        .where(eq(UserSubscription.email, user.primaryEmailAddress.emailAddress))
+        .then(res => res || []);
 
       if (result.length > 0) {
         setUserSubscription(true);
