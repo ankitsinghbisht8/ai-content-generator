@@ -99,7 +99,7 @@ function Billing() {
         email: user.primaryEmailAddress.emailAddress, // ✅ Ensure field matches schema
         userName: user.fullName || null, // Handle undefined case
         active: true,
-        paymenId: paymentId,
+        paymentId: paymentId,
         joinDate: new Date(), // ✅ Store as Date, avoid moment() string
       });
 
