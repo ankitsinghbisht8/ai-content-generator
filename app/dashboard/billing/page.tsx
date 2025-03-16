@@ -88,13 +88,19 @@ function Billing() {
   };
 
   const saveSubscription = async (paymentId: string) => {
+    if (!user || !user.primaryEmailAddress) {
+      console.error("User or email not found");
+      alert("User information is missing.");
+      return;
+    }
+
     try {
       const result = await db.insert(UserSubscription).values({
-        email: user?.primaryEmailAddress?.emailAddress,
-        userName: user?.fullName,
+        email: user.primaryEmailAddress.emailAddress, // ✅ Ensure field matches schema
+        userName: user.fullName || null, // Handle undefined case
         active: true,
         paymenId: paymentId,
-        joinDate: moment().format("DD/MM/YYYY"),
+        joinDate: new Date(), // ✅ Store as Date, avoid moment() string
       });
 
       console.log("Subscription Saved:", result);
@@ -106,6 +112,7 @@ function Billing() {
       alert("Failed to save subscription. Please contact support.");
     }
   };
+
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center">

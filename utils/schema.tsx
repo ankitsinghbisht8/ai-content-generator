@@ -9,11 +9,11 @@ export const AIOutput = pgTable('aiOutput', {
     createdAt: timestamp('createdAt', { withTimezone: true }).defaultNow() // ✅ Corrected type
 });
 
-export const UserSubscription = pgTable('userSubscription', {
-    id: serial('id').primaryKey(),
-    email: varchar('email').notNull(), // ✅ Removed length
-    userName: varchar('userName'),
-    active: boolean('active').notNull().default(false),  // ✅ Ensures `active` is not null
-    paymenId: varchar('paymentId'),
-    joinDate: timestamp('joinDate', { withTimezone: true }) // ✅ Corrected type
+export const UserSubscription = pgTable("user_subscriptions", {
+    id: serial("id").primaryKey(),
+    email: varchar("email", { length: 255 }).notNull(), // ✅ Ensure this field exists
+    userName: varchar("userName", { length: 255 }),
+    active: boolean("active").default(false),
+    paymenId: varchar("paymenId", { length: 255 }),
+    joinDate: timestamp("joinDate"),
 });

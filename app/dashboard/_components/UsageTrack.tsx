@@ -32,19 +32,24 @@ function UsageTrack() {
 
   const GetData = async () => {
     const email = user?.primaryEmailAddress?.emailAddress;
-    if (!email) return; // Ensure email is always valid
+
+    if (!email) {
+      console.warn("❗ User email is undefined, skipping DB query.");
+      return;
+    }
 
     try {
       const result: HISTORY[] = await db
         .select()
         .from(AIOutput)
-        .where(eq(AIOutput.createdBy, email));
+        .where(eq(AIOutput.createdBy, email)); // ✅ email is now guaranteed to be a string
 
       GetTotalUsage(result || []);
     } catch (error) {
       console.error("❌ Error fetching AI output history:", error);
     }
   };
+
 
   const IsUserSubscribe = async () => {
     const email = user?.primaryEmailAddress?.emailAddress;
