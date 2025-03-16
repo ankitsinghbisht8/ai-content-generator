@@ -32,13 +32,15 @@ function UsageTrack() {
   }, [updateCreditUsage, user]);
 
   const GetData = async () => {
-    if (!user?.primaryEmailAddress?.emailAddress) return;
+    const email = user?.primaryEmailAddress?.emailAddress;
+    if (!email) return; // Ensure email is always valid
+
 
     try {
       const result = await db
         .select()
         .from(AIOutput)
-        .where(eq(AIOutput.createdBy, user.primaryEmailAddress.emailAddress))
+        .where(eq(AIOutput.createdBy, email))
         .then(res => res || []); // Ensure result is always an array
 
       GetTotalUsage(result as HISTORY[]);
