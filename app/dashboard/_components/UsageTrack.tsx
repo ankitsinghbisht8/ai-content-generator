@@ -5,7 +5,6 @@ import { AIOutput, UserSubscription } from "@/utils/schema";
 import { useUser } from "@clerk/nextjs";
 import { eq } from "drizzle-orm";
 import React, { useContext, useEffect, useState } from "react";
-import { HISTORY } from "../history/page";
 import { TotalUsageContext } from "@/app/(context)/TotalUsageContext";
 import { UserSubscriptionContext } from "@/app/(context)/UserSubscriptionContext";
 import { UpdateCreditUsageContext } from "@/app/(context)/UpdateCreditUsageContext";
@@ -39,7 +38,7 @@ function UsageTrack() {
     }
 
     try {
-      const result: HISTORY[] = await db
+      const result: { aiResponse: string | null }[] = await db
         .select()
         .from(AIOutput)
         .where(eq(AIOutput.createdBy, email)); // ✅ email is now guaranteed to be a string
@@ -70,25 +69,38 @@ function UsageTrack() {
     }
   };
 
-  const GetTotalUsage = (result: HISTORY[]) => {
+  const GetTotalUsage = (result: { aiResponse: string | null }[]) => {
     const total = result.reduce((sum, item) => sum + (item.aiResponse?.length || 0), 0);
     setTotalUsage(total);
   };
 
   return (
-    <div className="m-5">
-      <div className="bg-primary text-white p-3 rounded-lg">
-        <h2>Credits</h2>
-        <div className="h-2 bg-[#9991f9] w-full rounded-full mt-3">
+    <div className="space-y-4">
+      <div className="bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-200 rounded-2xl p-4">
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="font-semibold text-gray-900 text-sm">Credits</h3>
+          <div className="text-xs text-gray-500 font-medium">
+            {Math.min(totalUsage, maxWords)}/{maxWords}
+          </div>
+        </div>
+        
+        <div className="h-2 bg-gray-200 rounded-full overflow-hidden mb-2">
           <div
-            className="h-2 bg-white rounded-full"
-            style={{ width: `${(totalUsage / maxWords) * 100}%` }}
+            className="h-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full transition-all duration-300"
+            style={{ width: `${Math.min(100, Math.max(0, (totalUsage / maxWords) * 100))}%` }}
           ></div>
         </div>
-        <h2 className="text-sm my-2">{totalUsage}/{maxWords} credits used</h2>
+        
+        <p className="text-xs text-gray-600">
+          {maxWords - Math.min(totalUsage, maxWords)} credits remaining
+        </p>
       </div>
-      <Button variant="secondary" className="w-full my-3 text-primary">
-        Upgrade
+      
+      <Button 
+        variant="default" 
+        className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white border-0 rounded-xl font-medium shadow-sm hover:shadow-md transition-all"
+      >
+        ✨ Upgrade Plan
       </Button>
     </div>
   );

@@ -1,4 +1,125 @@
 export default  [
+    // Image Prompt Generator (for image model-ready prompts)
+    {
+        name: 'Image Prompt Generator',
+        desc: 'Generate a high-quality, model-ready prompt for image generation (style, lighting, camera, details).',
+        icon: 'https://cdn-icons-png.flaticon.com/128/1829/1829586.png',
+        category: 'Images',
+        slug: 'image-prompt-generator',
+        aiPrompt: 'You are an expert prompt engineer for text-to-image models (e.g., SDXL). Using the provided inputs, generate ONE concise, production-ready prompt. If a promptTemplate is provided, fill its placeholders with the inputs and refine minimally. Return ONLY the final prompt text, no markdown, no headings.',
+        promptTemplate: 'A highly detailed, ultra-realistic photo of {{idea}}, in a {{style}} style, mood: {{mood}}. Shot on a full-frame DSLR with a 50mm lens, f/1.8, soft cinematic lighting, volumetric light rays, high dynamic range, 8k, ultra sharp, film grain. Inspired by {{artist}}. Negative: {{negative}}',
+        form: [
+            {
+                label: 'Idea / Subject',
+                field: 'input',
+                name: 'idea',
+                required: true
+            },
+            {
+                label: 'Style (e.g., cinematic, anime, watercolor)',
+                field: 'input',
+                name: 'style'
+            },
+            {
+                label: 'Mood (e.g., moody, vibrant, serene)',
+                field: 'input',
+                name: 'mood'
+            },
+            {
+                label: 'Artist/Influence (optional)',
+                field: 'input',
+                name: 'artist'
+            },
+            {
+                label: 'Negative Cues (what to avoid)',
+                field: 'textarea',
+                name: 'negative'
+            }
+        ]
+    },
+
+    // Nano Banana Image Generator (uses generated prompt)
+    {
+        name: 'Nano Banana Image Generator',
+        desc: 'Generate images using your prompt via Gemini image model (Nano Banana).',
+        icon: 'https://cdn-icons-png.flaticon.com/128/1047/1047711.png',
+        category: 'Images',
+        slug: 'nano-banana-image-generator',
+        aiPrompt: 'Generate images using Gemini for the given prompt. Return image URLs only.',
+        form: [
+            {
+                label: 'Final Image Prompt',
+                field: 'textarea',
+                name: 'prompt',
+                required: true
+            },
+            {
+                label: 'Number of Images',
+                field: 'select',
+                name: 'numImages',
+                options: [
+                    { label: '1', value: '1' },
+                    { label: '2', value: '2' },
+                    { label: '3', value: '3' },
+                    { label: '4', value: '4' }
+                ]
+            },
+            {
+                label: 'Image Size',
+                field: 'select',
+                name: 'size',
+                options: [
+                    { label: '512 x 512 (Square)', value: '512x512' },
+                    { label: '768 x 768 (Square)', value: '768x768' },
+                    { label: '1024 x 1024 (Square)', value: '1024x1024' },
+                    { label: '768 x 1344 (Portrait)', value: '768x1344' },
+                    { label: '1344 x 768 (Landscape)', value: '1344x768' }
+                ]
+            }
+        ]
+    },
+
+    // Multi-Image Composer (combine 2-4 images with a prompt)
+    {
+        name: 'Nano Banana Multi-Image Composer',
+        desc: 'Upload 2-4 images and a prompt. Nano Banana composes a final image set.',
+        icon: 'https://cdn-icons-png.flaticon.com/128/742/742751.png',
+        category: 'Images',
+        slug: 'nano-banana-multi-image-composer',
+        aiPrompt: 'Combine the provided images according to the user prompt to produce a cohesive final composition.',
+        form: [
+            {
+                label: 'Prompt to Guide Composition',
+                field: 'textarea',
+                name: 'prompt',
+                required: true
+            },
+            {
+                label: 'Number of Outputs',
+                field: 'select',
+                name: 'numImages',
+                options: [
+                    { label: '1', value: '1' },
+                    { label: '2', value: '2' },
+                    { label: '3', value: '3' },
+                    { label: '4', value: '4' }
+                ]
+            },
+            {
+                label: 'Image Size',
+                field: 'select',
+                name: 'size',
+                options: [
+                    { label: '512 x 512 (Square)', value: '512x512' },
+                    { label: '768 x 768 (Square)', value: '768x768' },
+                    { label: '1024 x 1024 (Square)', value: '1024x1024' },
+                    { label: '768 x 1344 (Portrait)', value: '768x1344' },
+                    { label: '1344 x 768 (Landscape)', value: '1344x768' }
+                ]
+            }
+        ]
+    },
+
     {
         name:'Blog Title',
         desc:'An AI tool that generate blog title depends on yout blog information',
@@ -347,7 +468,5 @@ export default  [
            
         ]
     },
-
-
 
 ]

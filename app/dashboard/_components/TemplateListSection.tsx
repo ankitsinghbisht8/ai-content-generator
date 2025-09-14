@@ -9,13 +9,15 @@ export interface TEMPLATE{
     category:string,
     slug: string,
     aiPrompt:string,
-    form?:FORM[]
+    form?:FORM[],
+    promptTemplate?: string
 }
 export interface FORM{
     label:string,
     field:string,
     name:string,
     required?:boolean,
+    options?: { label: string; value: string }[]
 }
 const TemplateListSection = ({userSearchInput}:any) => {
 
@@ -33,11 +35,16 @@ const TemplateListSection = ({userSearchInput}:any) => {
         }
     },[userSearchInput])
   return (
-    <div className='grid grid-cols-2 md:grid-cols:3 lg:grid-cols-4 gap-5 p-10'>
+    <div className='px-6 py-12 max-w-7xl mx-auto'>
+      <div className='mb-8'>
+        <h2 className='text-2xl font-bold text-gray-900 mb-2'>Available Templates</h2>
+        <p className='text-gray-600'>Choose from our collection of AI-powered content generators</p>
+      </div>
+      <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'>
         {templateList.map((item:TEMPLATE,index:number)=>(
-            <TemplateCard {...item}/>
-            
+            <TemplateCard key={index} {...item}/>
         ))}
+      </div>
     </div>
   )
 }

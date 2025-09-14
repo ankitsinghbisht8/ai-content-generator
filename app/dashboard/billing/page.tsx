@@ -122,7 +122,7 @@ function Billing() {
         </h1>
         <div className="flex flex-col md:flex-row justify-center items-center gap-8">
           {/* Free Plan */}
-          <div className="w-full md:w-1/3 bg-white rounded-xl shadow-lg p-6 text-center">
+          <div className="w-full md:w-1/3 style={{backgroundColor: '#F6F4F0'}} rounded-xl shadow-lg p-6 text-center">
             <h3 className="text-lg font-semibold mb-2">Free</h3>
             <h2 className="text-4xl font-bold text-gray-800 mb-4">0$</h2>
             <p className="text-sm text-gray-500 mb-4">/month</p>
@@ -138,7 +138,7 @@ function Billing() {
           </div>
 
           {/* Monthly Plan */}
-          <div className="w-full md:w-1/3 bg-white rounded-xl shadow-lg p-6 text-center">
+          <div className="w-full md:w-1/3 style={{backgroundColor: '#F6F4F0'}} rounded-xl shadow-lg p-6 text-center">
             <h3 className="text-lg font-semibold mb-2">Monthly</h3>
             <h2 className="text-4xl font-bold text-blue-600 mb-4">9.99$</h2>
             <p className="text-sm text-gray-500 mb-4">/month</p>

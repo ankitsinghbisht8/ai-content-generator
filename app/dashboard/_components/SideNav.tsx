@@ -38,30 +38,43 @@ function SideNav() {
         console.log(path)
     }, [path])
     return (
-        <div className='h-screen relative p-5 shadow-sm border bg-white'>
-
-            <div className="flex items-center space-x-2 justify-center">
-                <Image src="/sparkle-logo.svg" alt="AIContent" width={24} height={24} />
-
-                <span className="text-black font-semibold text-lg">
-                    AI<span className="text-gray-700">Content</span>
-                </span>
+        <div className='h-screen relative border-r border-gray-100' style={{backgroundColor: '#F6F4F0'}}>
+            {/* Logo Section */}
+            <div className="p-6 border-b border-gray-100">
+                <div className="flex items-center space-x-3 justify-center">
+                    <div className="w-15 h-15 rounded-lg flex items-center justify-center">
+                        <Image src="/logoCrescent.svg" alt="AIContent" width={30} height={30} className="text-white" />
+                    </div>
+                    <span className="font-bold text-xl bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+                        Crescent
+                    </span>
+                </div>
             </div>
 
-            <hr className='my-6 border' />
-            <div className='mt-3'>
+            {/* Navigation Menu */}
+            <div className='p-4 space-y-2'>
                 {MenuList.map((menu, index) => (
-                    <div className={`flex gap-2 mb-2 p-3 hover:bg-primary hover:text-white rounded-lg cursor-pointer items-center ${path == menu.path && 'bg-primary text-white'}`} onClick={() => router.push(menu.path)}>
-                        <menu.icon className='h-6 w-6' />
-                        <h2 className='text-lg'>{menu.name}</h2>
+                    <div 
+                        key={index}
+                        className={`flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition-all duration-200 group ${
+                            path == menu.path 
+                                ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg' 
+                                : 'hover:bg-gray-50 text-gray-700 hover:text-gray-900'
+                        }`} 
+                        onClick={() => router.push(menu.path)}
+                    >
+                        <menu.icon className={`h-5 w-5 ${path == menu.path ? 'text-white' : 'text-gray-500 group-hover:text-gray-700'}`} />
+                        <span className={`font-medium ${path == menu.path ? 'text-white' : 'text-gray-700 group-hover:text-gray-900'}`}>
+                            {menu.name}
+                        </span>
                     </div>
                 ))}
-
             </div>
-            <div className='absolute bottom-10 left-0 w-full'>
+
+            {/* Usage Track */}
+            <div className='absolute bottom-0 left-0 right-0 p-4'>
                 <UsageTrack />
             </div>
-
         </div>
     )
 }
