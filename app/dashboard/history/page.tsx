@@ -37,7 +37,8 @@ const HistoryPage = async () => {
       })
       .from(AIOutput)
       .where(eq(AIOutput.createdBy, email))
-      .orderBy(desc(AIOutput.createdAt));
+      .orderBy(desc(AIOutput.createdAt))
+      .limit(20);
 
     // console.log("Fetched data:", results);
 
