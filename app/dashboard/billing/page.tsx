@@ -78,7 +78,7 @@ function Billing() {
         setLoading(false);
       },
       theme: {
-        color: "#3399cc",
+        color: "#059669",
       },
     };
 
@@ -115,49 +115,70 @@ function Billing() {
 
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-      <div className="w-full max-w-5xl px-4">
-        <h1 className="text-2xl md:text-4xl font-bold text-center mb-8">
-          Upgrade With Monthly Plan
-        </h1>
+    <div className="min-h-screen flex items-center justify-center p-6" style={{backgroundColor: '#EDF2F4'}}>
+      <div className="w-full max-w-5xl">
+        <div className="text-center mb-12">
+          <h1 className="text-3xl md:text-5xl font-bold text-gray-900 mb-4">
+            Upgrade With Monthly Plan
+          </h1>
+          <p className="text-xl text-gray-600">Choose the plan that works for you</p>
+        </div>
         <div className="flex flex-col md:flex-row justify-center items-center gap-8">
           {/* Free Plan */}
-          <div className="w-full md:w-1/3 style={{backgroundColor: '#F6F4F0'}} rounded-xl shadow-lg p-6 text-center">
-            <h3 className="text-lg font-semibold mb-2">Free</h3>
-            <h2 className="text-4xl font-bold text-gray-800 mb-4">0$</h2>
-            <p className="text-sm text-gray-500 mb-4">/month</p>
-            <ul className="list-none mb-6 text-gray-700">
-              <li className="mb-2">✓ 10,000 Words/Month</li>
-              <li className="mb-2">✓ 50+ Content Templates</li>
-              <li className="mb-2">✓ Unlimited Download & Copy</li>
-              <li className="mb-2">✓ 1 Month of History</li>
+          <div className="w-full md:w-1/3 bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 p-8 text-center">
+            <div className="mb-6">
+              <span className="inline-block px-3 py-1 bg-gray-100 text-gray-600 rounded-lg text-sm font-medium mb-3">Starter</span>
+              <h3 className="text-2xl font-semibold mb-2 text-gray-900">Free</h3>
+              <div className="flex items-center justify-center mb-2">
+                <span className="text-4xl font-semibold text-gray-900">$0</span>
+                <span className="text-gray-500 ml-2">/month</span>
+              </div>
+            </div>
+            <ul className="list-none mb-8 text-gray-600 space-y-3">
+              <li className="flex items-center justify-center">✓ <span className="font-semibold text-gray-700 ml-1">10,000 Credits/Month</span></li>
+              <li className="flex items-center justify-center">✓ 50+ Content Templates</li>
+              <li className="flex items-center justify-center">✓ Unlimited Download & Copy</li>
+              <li className="flex items-center justify-center">✓ 1 Month of History</li>
             </ul>
-            <button className="px-6 py-3 bg-gray-800 text-white rounded-md font-medium w-full">
+            <button className="px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-medium w-full transition-all duration-200">
               Currently Active Plan
             </button>
           </div>
 
           {/* Monthly Plan */}
-          <div className="w-full md:w-1/3 style={{backgroundColor: '#F6F4F0'}} rounded-xl shadow-lg p-6 text-center">
-            <h3 className="text-lg font-semibold mb-2">Monthly</h3>
-            <h2 className="text-4xl font-bold text-blue-600 mb-4">9.99$</h2>
-            <p className="text-sm text-gray-500 mb-4">/month</p>
-            <ul className="list-none mb-6 text-gray-700">
-              <li className="mb-2">
-                ✓ <span className="text-blue-600">1,00,000 Words/Month</span>
-              </li>
-              <li className="mb-2">✓ 50+ Template Access</li>
-              <li className="mb-2">✓ Unlimited Download & Copy</li>
-              <li className="mb-2">✓ 1 Year of History</li>
-            </ul>
-            <button
-              disabled={loading}
-              onClick={() => createSubscription()}
-              className="px-6 py-3 border-2 border-blue-600 text-blue-600 rounded-md font-medium w-full flex gap-2 items-center justify-center"
-            >
-              {loading && <Loader2Icon className="animate-spin" />}
-              {userSubscription ? "Active Plan" : "Get Started"}
-            </button>
+          <div className="w-full md:w-1/3 bg-white border-2 border-teal-200 rounded-2xl shadow-md hover:shadow-lg transition-all duration-200 p-8 text-center relative">
+            {/* Popular badge */}
+            <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+              <span className="bg-teal-600 text-white px-3 py-1 rounded-lg text-sm font-medium shadow-sm">Most Popular</span>
+            </div>
+            
+            <div className="pt-4">
+              <div className="mb-6">
+                <span className="inline-block px-3 py-1 bg-teal-50 text-teal-600 rounded-lg text-sm font-medium mb-3">Professional</span>
+                <h3 className="text-2xl font-semibold mb-2 text-gray-900">Monthly</h3>
+                <div className="flex items-center justify-center mb-2">
+                  <span className="text-4xl font-semibold text-teal-600">$9.99</span>
+                  <span className="text-gray-500 ml-2">/month</span>
+                </div>
+              </div>
+              <ul className="list-none mb-8 text-gray-600 space-y-3">
+                <li className="flex items-center justify-center">
+                  ✓ <span className="text-teal-600 ml-1 font-medium">1,00,000 Words/Month</span>
+                </li>
+                <li className="flex items-center justify-center">✓ 500+ Images/Month</li>
+                <li className="flex items-center justify-center">✓ 50+ Template Access</li>
+                <li className="flex items-center justify-center">✓ Unlimited Download & Copy</li>
+                <li className="flex items-center justify-center">✓ 1 Year of History</li>
+              </ul>
+              <button
+                disabled={loading}
+                onClick={() => createSubscription()}
+                className="px-6 py-3 bg-teal-600 hover:bg-teal-700 disabled:bg-teal-400 text-white rounded-xl font-medium w-full flex gap-2 items-center justify-center transition-all duration-200"
+              >
+                {loading && <Loader2Icon className="animate-spin" />}
+                {userSubscription ? "Active Plan" : "Get Started"}
+              </button>
+            </div>
           </div>
         </div>
       </div>

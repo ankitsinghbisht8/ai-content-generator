@@ -46,11 +46,15 @@ const FormSection = ({selectedTemplate,userFormInput,loading}:PROPS) => {
 
     }
   return (
-    <div className='p-5 shadow-md border rounded-lg' style={{backgroundColor: '#F6F4F0'}}>
-        {/* @ts-ignore */}
-        <Image src={selectedTemplate?.icon} alt='icon' width={70} height={70} />
-        <h2 className='font-bold text-2xl mb-2 text-primary'>{selectedTemplate?.name}</h2>
-        <p className='text-gray-500 text-sm'>{selectedTemplate?.desc}</p>
+    <div className='p-6 bg-white shadow-lg border border-gray-200 rounded-2xl'>
+        <div className='flex items-center gap-3 mb-6'>
+            {/* @ts-ignore */}
+            <Image src={selectedTemplate?.icon} alt='icon' width={70} height={70} />
+            <div>
+                <h2 className='font-bold text-2xl text-gray-900'>{selectedTemplate?.name}</h2>
+                <p className='text-gray-500 text-sm'>{selectedTemplate?.desc}</p>
+            </div>
+        </div>
 
         <form className='mt-6' onSubmit={onSubmit}>
 
@@ -85,7 +89,7 @@ const FormSection = ({selectedTemplate,userFormInput,loading}:PROPS) => {
                     ): null}
                 </div>
             ))}
-            <Button type='submit' className='w-full py-6'
+            <Button type='submit' className='w-full py-6 bg-emerald-600 hover:bg-emerald-700 text-white transition-all hover:scale-105'
             disabled={loading}>
                 {loading && <Loader2Icon className='animate-spin'/>}
                 Generate Content</Button>

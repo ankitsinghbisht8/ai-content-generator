@@ -35,11 +35,7 @@ const TemplateListSection = ({userSearchInput}:any) => {
         }
     },[userSearchInput])
   return (
-    <div className='px-6 py-12 max-w-7xl mx-auto'>
-      <div className='mb-8'>
-        <h2 className='text-2xl font-bold text-gray-900 mb-2'>Available Templates</h2>
-        <p className='text-gray-600'>Choose from our collection of AI-powered content generators</p>
-      </div>
+    <div className='px-6 pb-12 max-w-7xl mx-auto'>
       <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'>
         {templateList.map((item:TEMPLATE,index:number)=>(
             <TemplateCard key={index} {...item}/>

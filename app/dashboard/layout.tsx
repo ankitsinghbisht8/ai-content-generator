@@ -18,13 +18,13 @@ function layout({
     <TotalUsageContext.Provider value={{totalUsage,setTotalUsage}}>
       <UserSubscriptionContext.Provider value={{userSubscription, setUserSubscription}}>
         <UpdateCreditUsageContext.Provider value={{updateCreditUsage,setUpdateCreditUsage}}>
-    <div className='bg-gray-50/50 min-h-screen'>
+    <div className='min-h-screen' style={{backgroundColor: '#EDF2F4'}}>
         <div className='md:w-64 hidden md:block fixed'>
         <SideNav/>
     </div>
     <div className='md:ml-64'>
       <Header/>
-      <main className='min-h-screen'>
+      <main className='min-h-screen' style={{backgroundColor: '#EDF2F4'}}>
         {children}
       </main>
     </div>

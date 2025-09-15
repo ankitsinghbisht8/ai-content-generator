@@ -104,19 +104,19 @@ const HistoryClient = ({ data }: { data: HISTORY[] }) => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="bg-gradient-to-r from-blue-50 to-purple-50 border border-gray-200 rounded-xl p-6">
+      <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            {/* <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg p-2">
-              <Sparkles className="h-6 w-6 text-white" />
-            </div> */}
+            <div className="bg-gray-100 rounded-lg p-2.5">
+              <Sparkles className="h-5 w-5 text-gray-600" />
+            </div>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Generation History</h1>
-              <p className="text-gray-600">View and manage your past AI-generated content</p>
+              <h1 className="text-2xl font-semibold text-gray-900">Generation History</h1>
+              <p className="text-gray-500">View and manage your past AI-generated content</p>
             </div>
           </div>
           <div className="text-right">
-            <div className="text-2xl font-bold text-blue-600">{data.length}</div>
+            <div className="text-2xl font-semibold text-gray-700">{data.length}</div>
             <div className="text-sm text-gray-500">Total Generations</div>
           </div>
         </div>
@@ -131,34 +131,39 @@ const HistoryClient = ({ data }: { data: HISTORY[] }) => {
           const response = formatResponse(item.aiResponse)
           
           return (
-            <div key={item.id} className="border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-all duration-200" style={{backgroundColor: '#F6F4F0'}}>
-              <div className="p-6">
-                {/* Header */}
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex items-center gap-4">
-                    {template && (
-                      <>
-                        <div className="bg-gray-50 rounded-lg p-2">
-                          <Image 
-                            src={template.icon} 
-                            alt={template.name} 
-                            width={40} 
-                            height={40}
-                            className="rounded"
-                          />
-                        </div>
-                        <div>
-                          <h3 className="font-semibold text-gray-900">{template.name}</h3>
-                          <p className="text-sm text-gray-500">{template.desc}</p>
-                        </div>
-                      </>
-                    )}
-                  </div>
-                  <div className="flex items-center gap-2 text-sm text-gray-500">
-                    <Calendar className="h-4 w-4" />
-                    {formatDate(item.createdAt)}
+            <div key={item.id} className="bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden">
+              <div className="relative">
+                {/* Minimal header */}
+                <div className="bg-gray-50 border-b border-gray-100 p-6">
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-center gap-4">
+                      {template && (
+                        <>
+                          <div className="bg-white border border-gray-200 rounded-lg p-2.5 shadow-sm">
+                            <Image 
+                              src={template.icon} 
+                              alt={template.name} 
+                              width={24} 
+                              height={24}
+                              className="opacity-80"
+                            />
+                          </div>
+                          <div>
+                            <h3 className="font-semibold text-gray-900 text-base">{template.name}</h3>
+                            <p className="text-gray-500 text-sm">{template.desc}</p>
+                          </div>
+                        </>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-gray-500 bg-gray-100 px-3 py-1.5 rounded-lg">
+                      <Calendar className="h-3 w-3" />
+                      {formatDate(item.createdAt)}
+                    </div>
                   </div>
                 </div>
+                
+                {/* Content section */}
+                <div className="p-6">
 
                 {/* Response Content */}
                 <div className="space-y-3">
@@ -193,7 +198,7 @@ const HistoryClient = ({ data }: { data: HISTORY[] }) => {
                         {isExpanded && item.aiResponse && (
                           <div className="mt-3 grid grid-cols-2 md:grid-cols-3 gap-3">
                             {item.aiResponse.split('\n').filter(line => line.includes('data:image/')).map((imageData, idx) => (
-                              <div key={idx} className="aspect-square rounded-lg overflow-hidden border" style={{backgroundColor: '#F6F4F0'}}>
+                              <div key={idx} className="aspect-square rounded-lg overflow-hidden border bg-white">
                                 <img 
                                   src={imageData.trim()} 
                                   alt={`Generated image ${idx + 1}`}
@@ -228,11 +233,12 @@ const HistoryClient = ({ data }: { data: HISTORY[] }) => {
                     variant="outline"
                     size="sm"
                     onClick={() => copyToClipboard(item.aiResponse || '', item.id)}
-                    className="flex items-center gap-2"
+                    className="flex items-center gap-2 border-emerald-200 text-emerald-600 hover:bg-emerald-50"
                   >
                     <Copy className="h-4 w-4" />
                     {copiedItem === item.id ? 'Copied!' : 'Copy'}
                   </Button>
+                </div>
                 </div>
               </div>
             </div>
@@ -242,7 +248,7 @@ const HistoryClient = ({ data }: { data: HISTORY[] }) => {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-between border border-gray-200 rounded-xl p-4" style={{backgroundColor: '#F6F4F0'}}>
+        <div className="flex items-center justify-between bg-white border border-gray-200 rounded-xl p-4">
           <div className="flex items-center gap-2 text-sm text-gray-600">
             <span>
               Showing {startIndex + 1}-{Math.min(endIndex, data.length)} of {data.length} results
@@ -268,7 +274,7 @@ const HistoryClient = ({ data }: { data: HISTORY[] }) => {
                   variant={currentPage === page ? "default" : "ghost"}
                   size="sm"
                   onClick={() => setCurrentPage(page)}
-                  className="h-8 w-8 p-0"
+                  className={`h-8 w-8 p-0 ${currentPage === page ? 'bg-emerald-600 hover:bg-emerald-700 text-white' : ''}`}
                 >
                   {page}
                 </Button>

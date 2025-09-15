@@ -1,6 +1,7 @@
 import React from 'react';
 import { AIOutput } from '@/utils/schema';
 import { currentUser } from '@clerk/nextjs/server';
+import { SignedOut, SignIn } from '@clerk/nextjs';
 import { db } from '@/utils/db';
 import { desc, eq } from 'drizzle-orm';
 import HistoryClient, { HISTORY } from './_components/HistoryClient';
@@ -8,7 +9,16 @@ import HistoryClient, { HISTORY } from './_components/HistoryClient';
 const HistoryPage = async () => {
   const user = await currentUser();
   if (!user) {
-    return <div className="text-red-500 text-center mt-5">No user found</div>;
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="max-w-md w-full p-8 border border-gray-200 rounded-2xl bg-white shadow-lg text-center space-y-6">
+          <div className="text-xl font-semibold text-gray-900">Please sign in to view your history</div>
+          <SignedOut>
+            <SignIn />
+          </SignedOut>
+        </div>
+      </div>
+    );
   }
 
   try {
@@ -32,7 +42,7 @@ const HistoryPage = async () => {
     // console.log("Fetched data:", results);
 
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
+      <div className="min-h-screen p-6" style={{backgroundColor: '#EDF2F4'}}>
         <HistoryClient data={results} />
       </div>
     );

@@ -5,7 +5,13 @@ export default clerkMiddleware((auth, req) => {
   })
 
 
-const isProtectedRoute = createRouteMatcher(['/dashboard(.*)',"/",]);
+// Allow public access to landing page "/" and the dashboard for guest trial.
+// Protect sensitive areas: billing, history, settings.
+const isProtectedRoute = createRouteMatcher([
+  '/dashboard/billing(.*)',
+  '/dashboard/history(.*)',
+  '/dashboard/settings(.*)'
+]);
 
 
 export const config = {

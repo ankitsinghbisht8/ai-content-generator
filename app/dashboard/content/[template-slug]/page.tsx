@@ -1,5 +1,5 @@
 "use client";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import FormSection from "../_components/FormSection";
 import OutputSection from "../_components/OutputSection";
 import ImagePromptForm from "../_components/ImagePromptForm";
@@ -12,7 +12,7 @@ import Link from "next/link";
 import { chatSession } from "@/utils/AiModal";
 import { db } from "@/utils/db";
 import { AIOutput } from "@/utils/schema";
-import { useUser } from "@clerk/nextjs";
+import { useClerk, useUser } from "@clerk/nextjs";
 import moment from "moment";
 import { TotalUsageContext } from "@/app/(context)/TotalUsageContext";
 import { useRouter } from "next/navigation";
@@ -34,11 +34,23 @@ const CreateNewContent = (props: PROPS) => {
   const [refining, setRefining] = useState(false);
   const [aiOutput, setAiOutput] = useState<string>("");
   const [images, setImages] = useState<string[]>([]);
-  const { user } = useUser();
+  const { user, isSignedIn } = useUser();
+  const { openSignIn } = useClerk();
   const router = useRouter();
   const { totalUsage, setTotalUsage } = useContext(TotalUsageContext);
   const { userSubscription } = useContext(UserSubscriptionContext);
   const { setUpdateCreditUsage } = useContext(UpdateCreditUsageContext);
+
+  const [freeGenUsed, setFreeGenUsed] = useState<boolean>(false);
+
+  useEffect(() => {
+    try {
+      const flag = typeof window !== "undefined" ? window.localStorage.getItem("freeGenUsed") : null;
+      setFreeGenUsed(flag === "1");
+    } catch {
+      // ignore storage errors
+    }
+  }, []);
 
   /**
    * Generate basic prompt and display in RTE
@@ -106,6 +118,16 @@ Return only the refined prompt, nothing else.`;
    * Generate AI content
    */
   const GenerateAIContent = async (formData: any) => {
+    // Guest gating: allow exactly one successful generation when not signed in
+    if (!isSignedIn && freeGenUsed) {
+      try {
+        openSignIn?.({ afterSignInUrl: "/dashboard" });
+      } catch {
+        router.push("/sign-in");
+      }
+      return;
+    }
+
     if (totalUsage >= 10000 && !userSubscription) {
       alert(
         "You have reached the maximum usage limit of 10000 requests per month. Please upgrade your plan to continue using the service"
@@ -147,7 +169,9 @@ Return only the refined prompt, nothing else.`;
         setImages(imgs);
         // Save URLs list as newline-separated for history
         const toSave = imgs.join("\n");
-        await SaveInDb(formData, selectedTemplate?.slug, toSave || JSON.stringify(data));
+        if (isSignedIn) {
+          await SaveInDb(formData, selectedTemplate?.slug, toSave || JSON.stringify(data));
+        }
       } else if (selectedTemplate?.slug === "nano-banana-multi-image-composer") {
         // Expect a special payload from the multi-image form: { prompt, imagesData, numImages, size }
         const resp = await fetch("/api/generate-image", {
@@ -177,7 +201,9 @@ Return only the refined prompt, nothing else.`;
         const imgs: string[] = data?.images || [];
         setImages(imgs);
         const toSave = imgs.join("\n");
-        await SaveInDb(formData, selectedTemplate?.slug, toSave || JSON.stringify(data));
+        if (isSignedIn) {
+          await SaveInDb(formData, selectedTemplate?.slug, toSave || JSON.stringify(data));
+        }
       } else {
         const SelectedPrompt = selectedTemplate?.aiPrompt;
         const FinalAiPrompt = JSON.stringify(formData) + "," + SelectedPrompt;
@@ -187,7 +213,24 @@ Return only the refined prompt, nothing else.`;
           const outputText = result.response.text();
           setAiOutput(outputText);
           setImages([]);
-          await SaveInDb(formData, selectedTemplate?.slug, outputText);
+          if (isSignedIn) {
+            await SaveInDb(formData, selectedTemplate?.slug, outputText);
+          }
+        }
+      }
+
+      // After a successful generation as guest, mark free use and prompt sign-in
+      if (!isSignedIn && !freeGenUsed) {
+        try {
+          window.localStorage.setItem("freeGenUsed", "1");
+          setFreeGenUsed(true);
+        } catch {
+          // ignore storage errors
+        }
+        try {
+          openSignIn?.({ afterSignInUrl: "/dashboard" });
+        } catch {
+          router.push("/sign-in");
         }
       }
     } catch (e: any) {
@@ -224,22 +267,24 @@ Return only the refined prompt, nothing else.`;
   };
 
   return (
-    <div className="p-5">
-      <Link href={"/dashboard"}>
-        <Button>
-          <ArrowLeft />
-          Back
-        </Button>
-      </Link>
+    <div className="p-6 min-h-screen" style={{backgroundColor: '#EDF2F4'}}>
+      <div className="mb-6">
+        <Link href={"/dashboard"}>
+          <Button variant="ghost" className="flex items-center gap-2 text-gray-600 hover:text-emerald-600 transition-colors">
+            <ArrowLeft className="w-4 h-4" />
+            Back to Dashboard
+          </Button>
+        </Link>
+      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 py-5">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-7xl mx-auto">
         {/* FormSection or ImagePromptForm */}
         {selectedTemplate?.slug === 'image-prompt-generator' ? (
-          <div className="p-5 shadow-md border rounded-lg style={{backgroundColor: '#F6F4F0'}}">
+          <div className="p-6 bg-white shadow-lg border border-gray-200 rounded-2xl">
             <div className="flex items-center gap-3 mb-6">
               <img src={selectedTemplate?.icon} alt='icon' width={70} height={70} />
               <div>
-                <h2 className='font-bold text-2xl text-primary'>{selectedTemplate?.name}</h2>
+                <h2 className='font-bold text-2xl text-gray-900'>{selectedTemplate?.name}</h2>
                 <p className='text-gray-500 text-sm'>{selectedTemplate?.desc}</p>
               </div>
             </div>
@@ -250,11 +295,11 @@ Return only the refined prompt, nothing else.`;
             />
           </div>
         ) : selectedTemplate?.slug === 'nano-banana-multi-image-composer' ? (
-          <div className="p-5 shadow-md border rounded-lg style={{backgroundColor: '#F6F4F0'}}">
+          <div className="p-6 bg-white shadow-lg border border-gray-200 rounded-2xl">
             <div className="flex items-center gap-3 mb-6">
               <img src={selectedTemplate?.icon} alt='icon' width={70} height={70} />
               <div>
-                <h2 className='font-bold text-2xl text-primary'>{selectedTemplate?.name}</h2>
+                <h2 className='font-bold text-2xl text-gray-900'>{selectedTemplate?.name}</h2>
                 <p className='text-gray-500 text-sm'>{selectedTemplate?.desc}</p>
               </div>
             </div>
